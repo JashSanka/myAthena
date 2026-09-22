@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const videoRef = useRef(null);
+  const imageCaptureRef = useRef(null);
 
   const [time, setTime] = useState(0);
   const [started, setStarted] = useState(false);
@@ -30,7 +31,18 @@ function App() {
 
     videoRef.current.srcObject = videoData;
 
+    const track = videoData.getVideoTracks()[0];
+    imageCaptureRef.current = new ImageCapture(track);
+
+    console.log(track);
+
     setCameraReady(true);
+  }
+
+  function clickPhoto(){
+    const result = imageCaptureRef.current.takePhoto(); // blob
+    // Convert ArrayBuffer - bytes 
+    // Save 
   }
 
   async function getFullscreen() {
@@ -38,9 +50,10 @@ function App() {
   }
 
   async function startTest() {
-    await window.electronAPI.startTest();
-    setStarted(true);
+    await window.electronAPI.showExamRules();
   }
+  // await window.electronAPI.startTest();
+  // setStarted(true);
 
   function formatTimeLeft(ms) {
     const seconds = Math.floor((ms / 1000) % 60)
